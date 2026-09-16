@@ -3,201 +3,323 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظومة الخطة التشغيلية ومتابعة البرامج المدرسية</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>سجل برامج التوجيه الطلابي</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
-        
-        /* طباعة رسمية بجودة وطابع وزارة التعليم */
-        @media print {
-            .no-print { display: none !important; }
-            .print-area { display: block !important; }
-            body { background: white !important; font-size: 10pt; color: black !important; }
-            .official-border { border: 1.5px solid #0f172a !important; }
-            .header-bg-print { background-color: #0f172a !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .badge-print { border: 1px solid #64748b !important; background: transparent !important; color: black !important; }
+        :root {
+            --primary-color: #2b7a78;
+            --secondary-color: #3aafa9;
+            --dark-color: #17252a;
+            --light-color: #feffff;
+            --bg-color: #f4f7f6;
+            --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark-color);
+            padding: 20px;
+            direction: rtl;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: #ffffff;
+            padding: 25px 30px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            border-bottom: 4px solid var(--primary-color);
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .header-title p {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .logo img {
+            height: 75px;
+            object-fit: contain;
+        }
+
+        .add-form-container {
+            background: #ffffff;
+            padding: 20px 25px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+        }
+
+        .add-form-container h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--secondary-color);
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #205c5a;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 5px solid var(--secondary-color);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .card-header h3 {
+            font-size: 1.15rem;
+            color: var(--dark-color);
+        }
+
+        .badge {
+            background: #e8f4f8;
+            color: var(--primary-color);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .card-body p {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column-reverse;
+                text-align: center;
+                gap: 15px;
+            }
+            .logo img {
+                height: 60px;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col text-slate-800">
+<body>
 
-    <!-- Navbar الترويسة العليا -->
-    <header class="bg-slate-900 text-white shadow-lg no-print sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="bg-emerald-600 p-2.5 rounded-xl text-white">
-                    <i class="fa-solid fa-list-check text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="text-base font-bold">الخطة التشغيلية ومتابعة البرامج</h1>
-                    <p class="text-xs text-slate-400">متوسطة الحارث بن هشام - الإدارة المدرسية</p>
-                </div>
-            </div>
-            
-            <div class="flex items-center gap-2">
-                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-print"></i> طباعة الخطة والتقرير الرسميين
-                </button>
-            </div>
+<div class="container">
+    <header>
+        <div class="header-title">
+            <h1>منظومة التوجيه الطلابي</h1>
+            <p>دليل البرامج والإرشاد الإثرائي والنفسي والوقائي</p>
+        </div>
+        <div class="logo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Ministry_of_Education_KSA_Logo.svg" alt="شعار وزارة التعليم">
         </div>
     </header>
 
-    <!-- الترويسة الرسمية المطبوعة (هوية وزارة التعليم) -->
-    <div class="max-w-7xl mx-auto w-full px-6 pt-6 bg-white border-b border-slate-300 pb-4">
-        <div class="flex justify-between items-center text-center md:text-right">
-            <div class="text-xs font-bold space-y-1 text-slate-800">
-                <p>المملكة العربية السعودية</p>
-                <p>وزارة التعليم</p>
-                <p>الإدارة العامة للتعليم بالمنطقة الشرقية</p>
-                <p class="text-emerald-800 font-extrabold text-sm">متوسطة الحارث بن هشام</p>
+    <div class="add-form-container">
+        <h3>إضافة برنامج جديد</h3>
+        <form id="programForm">
+            <div class="form-grid">
+                <input type="text" id="title" placeholder="اسم البرنامج" required>
+                <select id="category" required>
+                    <option value="">اختر المجال</option>
+                    <option value="وقائي">وقائي</option>
+                    <option value="إنشائي / إثرائي">إنشائي / إثرائي</option>
+                    <option value="علاجي">علاجي</option>
+                    <option value="تحصيلي">تحصيلي / دراسي</option>
+                    <option value="مهني">مهني / مستقبلي</option>
+                </select>
+                <input type="text" id="target" placeholder="الفئة المستهدفة (مثال: الطلاب، اولياء الأمور)" required>
             </div>
-            
-            <div class="text-center">
-                <div class="w-16 h-16 mx-auto mb-1 flex items-center justify-center border-2 border-emerald-700 rounded-full text-emerald-800 font-bold text-xs p-1">
-                    وزارة التعليم<br>Ministry of Education
-                </div>
-                <h2 class="text-base font-extrabold text-slate-900">الخطة التشغيلية وسجل المتابعة للعام 1448هـ</h2>
-            </div>
-
-            <div class="text-xs font-bold space-y-1 text-left text-slate-800">
-                <p>مدير المدرسة: <span class="font-normal">عبد الله بن سعد السعيد</span></p>
-                <p>الموجه الطلابي: <span class="font-normal">سعيد أحمد المالكي</span></p>
-                <p>تاريخ التقرير: <span id="printDate" class="font-normal">--/--/----</span></p>
-            </div>
-        </div>
+            <textarea id="description" rows="2" placeholder="وصف مختصر للبرنامج وأهدافه..." required></textarea>
+            <button type="submit" class="btn" style="margin-top: 10px;">إضافة البرنامج +</button>
+        </form>
     </div>
 
-    <!-- المحتوى الرئيسي -->
-    <main class="max-w-7xl mx-auto px-4 py-6 flex-1 space-y-6 w-full">
+    <div class="programs-grid" id="programsContainer">
+        <!-- يتم تحميل البرامج هنا تلقائياً -->
+    </div>
+</div>
 
-        <!-- التبويبات -->
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden no-print">
-            <div class="flex border-b border-slate-200 bg-slate-50 overflow-x-auto text-xs font-bold">
-                <button onclick="switchTab('tab-plan')" id="btn-tab-plan" class="px-5 py-3 border-b-2 border-emerald-600 text-emerald-700 font-extrabold whitespace-nowrap">
-                    <i class="fa-solid fa-book-bookmark ml-1.5"></i> الخطة التشغيلية المعتمدة (60 برنامج)
-                </button>
-                <button onclick="switchTab('tab-track')" id="btn-tab-track" class="px-5 py-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap">
-                    <i class="fa-solid fa-user-check ml-1.5"></i> شاشة متابعة وتقييم البرامج (المسؤول والمساند)
-                </button>
-            </div>
-        </div>
+<script>
+    // قائمة البرامج المعتمدة الافتراضية
+    const defaultPrograms = [
+        { id: 1, title: "رفق (الرفق بالطلاب)", category: "وقائي", target: "جميع الطلاب", desc: "برنامج وقائي وتوعوي يهدف للحد من العنف بجميع أشكاله ونشر ثقافة التسامح والرفق في البيئة المدرسية." },
+        { id: 2, title: "خط المساندة", category: "وقائي", target: "الطلاب وأولياء الأمور", desc: "التوعية بخط مساندة الطفل (116111) وتقديم الدعم النفسي والاجتماعي للطلاب عند الحاجة." },
+        { id: 3, title: "خافض (الحد من التنمر)", category: "وقائي", target: "جميع المراحل", desc: "برنامج يسعى للحد من ظاهرة التنمر بين الطلاب وتقديم آليات المواجهة والتدخل المبكر." },
+        { id: 4, title: "التوجيه المهني والتعليمي (مساري)", category: "مهني", target: "طلاب المرحلة المتوسطة والثانوية", desc: "مساعدة الطلاب على اكتشاف ميولهم وقدراتهم واختيار المسارات التعليمية والمهنية المناسبة." },
+        { id: 5, title: "تعزيز السلوك الإيجابي", category: "إنشائي / إثرائي", target: "جميع الطلاب", desc: "مشروع يهدف إلى تنمية السلوكيات السليمة وتكريم الطلاب المتميزين سلوكياً في المدرسة." },
+        { id: 6, title: "رعاية الطلاب المتفوقين والوهوبين", category: "إنشائي / إثرائي", target: "الطلاب المتفوقون", desc: "تقديم برامج إثرائية ورعاية خاصة للطلاب المتميزين دراسياً وتنمية قدراتهم الابداعية." },
+        { id: 7, title: "رعاية الطلاب متاخري التحصيل الدراسي", category: "تحصيلي", target: "الطلاب المتأخرون دراسياً", desc: "حصر ومتابعة الطلاب ضعاف التحصيل ووضع خطط علاجية وتوجيهية لرفع مستواهم الدراسي." },
+        { id: 8, title: "حماية (التوعية بأضرار المخدرات)", category: "وقائي", target: "المرحلة المتوسطة والثانوية", desc: "حماية الطلاب من مخاطر المؤثرات العقلية والمخدرات والتوعية بآثارها وتنمية مهارات الرفض." },
+        { id: 9, title: "تكافل (المساعدات المالية والعينية)", category: "علاجي", target: "الطلاب المحتاجون", desc: "تقديم الدعم المادي والمعنوي للطلاب المحتاجين لضمان استمرارهم وتحصيلهم الدراسي دون عوائق." },
+        { id: 10, title: "التهيئة والإرشاد النفسي للاختبارات", category: "تحصيلي", target: "جميع الطلاب", desc: "تخفيف قلق الاختبارات وتدريب الطلاب على مهارات الاستذكار الجيد وإدارة الوقت." }
+    ];
 
-        <!-- 1. تبويب عرض الخطة التشغيلية الـ 60 كاملة -->
-        <section id="tab-plan" class="tab-content bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <h3 class="text-sm font-extrabold text-slate-800 mb-4 border-r-4 border-emerald-700 pr-2">جدول برامج ومبادرات الخطة التشغيلية الرسمية</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-right text-xs border-collapse">
-                    <thead>
-                        <tr class="bg-slate-900 text-white header-bg-print">
-                            <th class="p-2.5 border">م</th>
-                            <th class="p-2.5 border">اسم البرنامج</th>
-                            <th class="p-2.5 border">الهدف التشغيلي</th>
-                            <th class="p-2.5 border">مسؤول التنفيذ الرئيسي</th>
-                            <th class="p-2.5 border">المساند</th>
-                            <th class="p-2.5 border">المستهدفون</th>
-                            <th class="p-2.5 border">مؤشر الإنجاز</th>
-                        </tr>
-                    </thead>
-                    <tbody id="planTableBody" class="divide-y divide-slate-200">
-                        <!-- تعبئة تلقائية بالـ 60 برنامج -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
+    // استرجاع البرامج من LocalStorage أو تحميل القائمة الافتراضية
+    function getPrograms() {
+        const stored = localStorage.getItem('school_programs');
+        if (!stored) {
+            localStorage.setItem('school_programs', JSON.stringify(defaultPrograms));
+            return defaultPrograms;
+        }
+        return JSON.parse(stored);
+    }
 
-        <!-- 2. تبويب شاشة المتابعة والتقييم والمسؤول المساند -->
-        <section id="tab-track" class="tab-content hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
-            
-            <div class="border-b pb-4">
-                <h3 class="text-sm font-extrabold text-slate-800 mb-1 flex items-center gap-2">
-                    <i class="fa-solid fa-pen-clip text-emerald-600"></i> تسجيل متابعة برنامج وتقييم الأداء
-                </h3>
-                <p class="text-xs text-slate-500">اختر البرنامج لتحديد المسؤول الرئيسي والمساند وتقييم مستوى التنفيذ وإجراءات التحسين:</p>
-            </div>
+    // عرض البرامج في الصفحة
+    function renderPrograms() {
+        const programs = getPrograms();
+        const container = document.getElementById('programsContainer');
+        container.innerHTML = '';
 
-            <form id="trackingForm" onsubmit="submitTrackingData(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        programs.forEach(program => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = `
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">اختر البرنامج</label>
-                    <select id="trackProgSelect" onchange="autoFillProgDetails()" class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold focus:ring-2 focus:ring-emerald-500">
-                        <!-- خيارات البرامج -->
-                    </select>
+                    <div class="card-header">
+                        <h3>${program.title}</h3>
+                        <span class="badge">${program.category}</span>
+                    </div>
+                    <div class="card-body">
+                        <p>${program.desc}</p>
+                    </div>
                 </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">مسؤول التنفيذ الرئيسي</label>
-                    <input type="text" id="trackLead" required class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold" placeholder="مثال: الموجه الطلابي">
+                <div class="card-footer">
+                    <span>Target: ${program.target}</span>
+                    <button class="btn btn-danger" onclick="deleteProgram(${program.id})">حذف</button>
                 </div>
+            `;
+            container.appendChild(card);
+        });
+    }
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">المسؤول المساند</label>
-                    <input type="text" id="trackSupport" required class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold" placeholder="مثال: وكيل المدرسة / رائد النشاط">
-                </div>
+    // إضافة برنامج جديد
+    document.getElementById('programForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const newProgram = {
+            id: Date.now(),
+            title: document.getElementById('title').value,
+            category: document.getElementById('category').value,
+            target: document.getElementById('target').value,
+            desc: document.getElementById('description').value
+        };
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">حالة التنفيذ</label>
-                    <select id="trackStatus" class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold">
-                        <option value="تم التنفيذ بنجاح">تم التنفيذ بنجاح</option>
-                        <option value="نفذ جزئياً (نقص)">نفذ جزئياً (نقص)</option>
-                        <option value="متعثر (لم ينفذ)">متعثر (لم ينفذ)</option>
-                    </select>
-                </div>
+        const programs = getPrograms();
+        programs.unshift(newProgram);
+        localStorage.setItem('school_programs', JSON.stringify(programs));
+        
+        renderPrograms();
+        this.reset();
+    });
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">تقييم التنفيذ (من 10)</label>
-                    <input type="number" id="trackScore" min="1" max="10" required class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold" placeholder="10">
-                </div>
+    // حذف برنامج
+    function deleteProgram(id) {
+        if(confirm('هل أنت تأكد من رغبتك في حذف هذا البرنامج؟')) {
+            let programs = getPrograms();
+            programs = programs.filter(p => p.id !== id);
+            localStorage.setItem('school_programs', JSON.stringify(programs));
+            renderPrograms();
+        }
+    }
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">تاريخ المتابعة</label>
-                    <input type="date" id="trackDate" required class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold">
-                </div>
+    // تشغيل العرض أول مرة
+    renderPrograms();
+</script>
 
-                <div class="md:col-span-3">
-                    <label class="block text-xs font-bold text-slate-700 mb-1">أسباب التعثر / إجراءات التحسين المقترحة</label>
-                    <input type="text" id="trackNotes" class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold" placeholder="أدخل أسباب التعثر والخطوات العلاجية المتبعة">
-                </div>
-
-                <div class="md:col-span-3 text-left pt-2">
-                    <button type="submit" id="btnSaveTrack" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-lg text-xs transition">
-                        <i class="fa-solid fa-cloud-arrow-up ml-1"></i> حفظ تقييم المتابعة في Google Sheets
-                    </button>
-                </div>
-            </form>
-
-            <!-- جدول سجل التقييمات والمتابعات المسجلة -->
-            <div class="pt-6 border-t">
-                <h4 class="text-xs font-extrabold text-slate-800 mb-3">سجل المتابعات الميدانية المسجلة</h4>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-slate-800 text-white">
-                                <th class="p-2 border">البرنامج</th>
-                                <th class="p-2 border">الرئيسي</th>
-                                <th class="p-2 border">المساند</th>
-                                <th class="p-2 border">الحالة</th>
-                                <th class="p-2 border">التقييم</th>
-                                <th class="p-2 border">التاريخ</th>
-                                <th class="p-2 border">إجراءات التحسين</th>
-                            </tr>
-                        </thead>
-                        <tbody id="trackRecordsBody" class="divide-y divide-slate-200">
-                            <!-- المتابعات المسجلة -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </section>
-
-    </main>
-
-    <script src="app.js"></script>
 </body>
 </html>
