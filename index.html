@@ -3,83 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منظومة تحليل واقع المدرسة - التقرير الرسمي</title>
+    <title>منظومة الخطة التشغيلية ومتابعة البرامج المدرسية</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome icons -->
+    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
         body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
-
-        /* تنسيقات الطباعة الرسمية المطبقة للهوية البصرية */
+        
+        /* طباعة رسمية بجودة وطابع وزارة التعليم */
         @media print {
             .no-print { display: none !important; }
-            .print-only { display: block !important; }
-            body { background: white !important; font-size: 11pt; color: #000 !important; }
-            .page-break { page-break-before: always; }
-            .official-card { border: 1px solid #1e293b !important; box-shadow: none !important; border-radius: 0 !important; }
-            .header-bg { background-color: #0f172a !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .badge-style { border: 1px solid #94a3b8 !important; background: transparent !important; color: black !important; }
+            .print-area { display: block !important; }
+            body { background: white !important; font-size: 10pt; color: black !important; }
+            .official-border { border: 1.5px solid #0f172a !important; }
+            .header-bg-print { background-color: #0f172a !important; color: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .badge-print { border: 1px solid #64748b !important; background: transparent !important; color: black !important; }
         }
-        
-        .print-only { display: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col text-slate-800">
 
-    <!-- Navbar العلوي (إدارة النظام) -->
+    <!-- Navbar الترويسة العليا -->
     <header class="bg-slate-900 text-white shadow-lg no-print sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-600 p-2.5 rounded-xl text-white">
-                    <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    <i class="fa-solid fa-list-check text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-base font-bold">منظومة تحليل واقع المدرسة</h1>
-                    <p class="text-xs text-slate-400">الإدارة المدرسية والتوجيه الطلابي</p>
+                    <h1 class="text-base font-bold">الخطة التشغيلية ومتابعة البرامج</h1>
+                    <p class="text-xs text-slate-400">متوسطة الحارث بن هشام - الإدارة المدرسية</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-2">
-                <!-- زر فتح نافذة الاستيراد الخارجي -->
-                <button onclick="openImportModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-cloud-arrow-down"></i> جلب من موقع تفاعلي
-                </button>
                 <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-print"></i> طباعة السجل الرسمي
-                </button>
-                <button onclick="exportDataExcel()" class="bg-sky-600 hover:bg-sky-700 text-white px-3.5 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-file-excel"></i> تصدير Excel
+                    <i class="fa-solid fa-print"></i> طباعة الخطة والتقرير الرسميين
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- الهيدر الرسمي المطبوع (ترويسة وزارة التعليم) -->
+    <!-- الترويسة الرسمية المطبوعة (هوية وزارة التعليم) -->
     <div class="max-w-7xl mx-auto w-full px-6 pt-6 bg-white border-b border-slate-300 pb-4">
         <div class="flex justify-between items-center text-center md:text-right">
             <div class="text-xs font-bold space-y-1 text-slate-800">
                 <p>المملكة العربية السعودية</p>
                 <p>وزارة التعليم</p>
-                <p id="print-ministry-dept">الإدارة العامة للتعليم بالمنطقة الشرقية</p>
-                <p id="print-school-name" class="text-emerald-800 font-extrabold text-sm">مدرسة متوسطة الحارث بن هشام</p>
+                <p>الإدارة العامة للتعليم بالمنطقة الشرقية</p>
+                <p class="text-emerald-800 font-extrabold text-sm">متوسطة الحارث بن هشام</p>
             </div>
             
             <div class="text-center">
-                <div class="w-20 h-20 mx-auto mb-1 flex items-center justify-center border-2 border-emerald-700 rounded-full text-emerald-800 font-bold text-xs p-2">
+                <div class="w-16 h-16 mx-auto mb-1 flex items-center justify-center border-2 border-emerald-700 rounded-full text-emerald-800 font-bold text-xs p-1">
                     وزارة التعليم<br>Ministry of Education
                 </div>
-                <h2 class="text-base font-extrabold text-slate-900 mt-1">تقرير تحليل واقع المدرسة الشامل</h2>
+                <h2 class="text-base font-extrabold text-slate-900">الخطة التشغيلية وسجل المتابعة للعام 1448هـ</h2>
             </div>
 
             <div class="text-xs font-bold space-y-1 text-left text-slate-800">
-                <p>العام الدراسي: <span id="print-year" class="font-normal">1447 هـ</span></p>
-                <p>الفصل الدراسي: <span id="print-term" class="font-normal">الأول</span></p>
-                <p>تاريخ التقرير: <span id="print-date" class="font-normal">--/--/----</span></p>
+                <p>مدير المدرسة: <span class="font-normal">عبد الله بن سعد السعيد</span></p>
+                <p>الموجه الطلابي: <span class="font-normal">سعيد أحمد المالكي</span></p>
+                <p>تاريخ التقرير: <span id="printDate" class="font-normal">--/--/----</span></p>
             </div>
         </div>
     </div>
@@ -87,176 +77,126 @@
     <!-- المحتوى الرئيسي -->
     <main class="max-w-7xl mx-auto px-4 py-6 flex-1 space-y-6 w-full">
 
-        <!-- شريط التبويبات -->
+        <!-- التبويبات -->
         <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden no-print">
             <div class="flex border-b border-slate-200 bg-slate-50 overflow-x-auto text-xs font-bold">
-                <button onclick="switchTab('tab-entry')" id="btn-tab-entry" class="px-5 py-3 border-b-2 border-emerald-600 text-emerald-700 font-extrabold whitespace-nowrap">
-                    <i class="fa-solid fa-pen-to-square ml-1.5"></i> إدارة وإدخال البيانات والخطط
+                <button onclick="switchTab('tab-plan')" id="btn-tab-plan" class="px-5 py-3 border-b-2 border-emerald-600 text-emerald-700 font-extrabold whitespace-nowrap">
+                    <i class="fa-solid fa-book-bookmark ml-1.5"></i> الخطة التشغيلية المعتمدة (60 برنامج)
                 </button>
-                <button onclick="switchTab('tab-report')" id="btn-tab-report" class="px-5 py-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap">
-                    <i class="fa-solid fa-file-invoice ml-1.5"></i> التقرير الرسمي والشواهد
-                </button>
-                <button onclick="switchTab('tab-database')" id="btn-tab-database" class="px-5 py-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap">
-                    <i class="fa-solid fa-database ml-1.5"></i> قاعدة البيانات الحية (Google Sheets)
+                <button onclick="switchTab('tab-track')" id="btn-tab-track" class="px-5 py-3 border-b-2 border-transparent text-slate-600 hover:text-slate-900 whitespace-nowrap">
+                    <i class="fa-solid fa-user-check ml-1.5"></i> شاشة متابعة وتقييم البرامج (المسؤول والمساند)
                 </button>
             </div>
         </div>
 
-        <!-- 1. تبويب الإدخال والخطط -->
-        <section id="tab-entry" class="tab-content bg-white p-6 rounded-xl shadow-sm border border-slate-200 no-print space-y-6">
-            <div class="border-b pb-3 flex justify-between items-center">
-                <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-emerald-600"></i> نموذج إدخال وتحديث البيانات والخطط
-                </h2>
-                <span class="text-xs bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full border border-emerald-200">حفظ مباشر إلى Google Sheets</span>
+        <!-- 1. تبويب عرض الخطة التشغيلية الـ 60 كاملة -->
+        <section id="tab-plan" class="tab-content bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h3 class="text-sm font-extrabold text-slate-800 mb-4 border-r-4 border-emerald-700 pr-2">جدول برامج ومبادرات الخطة التشغيلية الرسمية</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-right text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-900 text-white header-bg-print">
+                            <th class="p-2.5 border">م</th>
+                            <th class="p-2.5 border">اسم البرنامج</th>
+                            <th class="p-2.5 border">الهدف التشغيلي</th>
+                            <th class="p-2.5 border">مسؤول التنفيذ الرئيسي</th>
+                            <th class="p-2.5 border">المساند</th>
+                            <th class="p-2.5 border">المستهدفون</th>
+                            <th class="p-2.5 border">مؤشر الإنجاز</th>
+                        </tr>
+                    </thead>
+                    <tbody id="planTableBody" class="divide-y divide-slate-200">
+                        <!-- تعبئة تلقائية بالـ 60 برنامج -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 2. تبويب شاشة المتابعة والتقييم والمسؤول المساند -->
+        <section id="tab-track" class="tab-content hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-6">
+            
+            <div class="border-b pb-4">
+                <h3 class="text-sm font-extrabold text-slate-800 mb-1 flex items-center gap-2">
+                    <i class="fa-solid fa-pen-clip text-emerald-600"></i> تسجيل متابعة برنامج وتقييم الأداء
+                </h3>
+                <p class="text-xs text-slate-500">اختر البرنامج لتحديد المسؤول الرئيسي والمساند وتقييم مستوى التنفيذ وإجراءات التحسين:</p>
             </div>
 
-            <form id="dynamicEntryForm" onsubmit="submitFormEntry(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <form id="trackingForm" onsubmit="submitTrackingData(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">اختر ورقة العمل / المجال</label>
-                    <select id="entrySheetTarget" onchange="updateFormFields()" class="w-full border border-slate-300 rounded-lg p-2.5 text-xs bg-slate-50 focus:ring-2 focus:ring-emerald-500 font-bold">
-                        <option value="البيانات الرئيسية">البيانات الرئيسية للمدرسة</option>
-                        <option value="بيانات الخطط المدرسية">بيانات الخطط المدرسية</option>
-                        <option value="التوجيه الطلابي">التوجيه الطلابي</option>
-                        <option value="النشاط الطلابي">النشاط الطلابي</option>
-                        <option value="برامج الموهوبين">برامج الموهوبين</option>
-                        <option value="التوجيه الصحي">التوجيه الصحي</option>
-                        <option value="حصر نسبة غياب الطلاب">حصر غياب الطلاب</option>
-                        <option value="نتائج التقويم الذاتي والخارجي">نتائج التقويم الذاتي والخارجي</option>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">اختر البرنامج</label>
+                    <select id="trackProgSelect" onchange="autoFillProgDetails()" class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold focus:ring-2 focus:ring-emerald-500">
+                        <!-- خيارات البرامج -->
                     </select>
                 </div>
 
-                <!-- الحقول الديناميكية التي تتغير بناء على الاختيار -->
-                <div id="dynamicFieldsContainer" class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- تتولد بواسطة JavaScript -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">مسؤول التنفيذ الرئيسي</label>
+                    <input type="text" id="trackLead" required class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold" placeholder="مثال: الموجه الطلابي">
                 </div>
 
-                <div class="md:col-span-3 pt-3 border-t text-left">
-                    <button type="submit" id="btnSaveData" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-lg text-xs transition">
-                        <i class="fa-solid fa-cloud-arrow-up ml-1"></i> حفظ وإرسال البيانات
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">المسؤول المساند</label>
+                    <input type="text" id="trackSupport" required class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold" placeholder="مثال: وكيل المدرسة / رائد النشاط">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">حالة التنفيذ</label>
+                    <select id="trackStatus" class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold">
+                        <option value="تم التنفيذ بنجاح">تم التنفيذ بنجاح</option>
+                        <option value="نفذ جزئياً (نقص)">نفذ جزئياً (نقص)</option>
+                        <option value="متعثر (لم ينفذ)">متعثر (لم ينفذ)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">تقييم التنفيذ (من 10)</label>
+                    <input type="number" id="trackScore" min="1" max="10" required class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold" placeholder="10">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">تاريخ المتابعة</label>
+                    <input type="date" id="trackDate" required class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold">
+                </div>
+
+                <div class="md:col-span-3">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">أسباب التعثر / إجراءات التحسين المقترحة</label>
+                    <input type="text" id="trackNotes" class="w-full border rounded-lg p-2.5 text-xs bg-slate-50 font-bold" placeholder="أدخل أسباب التعثر والخطوات العلاجية المتبعة">
+                </div>
+
+                <div class="md:col-span-3 text-left pt-2">
+                    <button type="submit" id="btnSaveTrack" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-lg text-xs transition">
+                        <i class="fa-solid fa-cloud-arrow-up ml-1"></i> حفظ تقييم المتابعة في Google Sheets
                     </button>
                 </div>
             </form>
-        </section>
 
-        <!-- 2. تبويب التقرير الرسمي المطبوع -->
-        <section id="tab-report" class="tab-content hidden space-y-6">
-            
-            <!-- ملخص التنفيذ والمؤشرات -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 official-card">
-                    <p class="text-xs font-bold text-slate-500">معدل غياب الطلاب</p>
-                    <h3 class="text-xl font-extrabold text-slate-800 mt-1" id="rep-student-absence">3.4%</h3>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 official-card">
-                    <p class="text-xs font-bold text-slate-500">معدل غياب المعلمين</p>
-                    <h3 class="text-xl font-extrabold text-amber-700 mt-1" id="rep-teacher-absence">6.9%</h3>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 official-card">
-                    <p class="text-xs font-bold text-slate-500">إنجاز برامج التوجيه والأنشطة</p>
-                    <h3 class="text-xl font-extrabold text-emerald-700 mt-1" id="rep-programs-exec">88%</h3>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 official-card">
-                    <p class="text-xs font-bold text-slate-500">متوسط فجوة التقويم الذاتي والخارجي</p>
-                    <h3 class="text-xl font-extrabold text-rose-700 mt-1" id="rep-gap-avg">-11.5%</h3>
-                </div>
-            </div>
-
-            <!-- جدول برامج التوجيه والأنشطة الرسمي -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 official-card">
-                <h3 class="text-sm font-extrabold text-slate-800 mb-3 border-r-4 border-emerald-700 pr-2">أولاً: برامج التوجيه الطلابي والأنشطة المدرسية المنفذة</h3>
+            <!-- جدول سجل التقييمات والمتابعات المسجلة -->
+            <div class="pt-6 border-t">
+                <h4 class="text-xs font-extrabold text-slate-800 mb-3">سجل المتابعات الميدانية المسجلة</h4>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right text-xs border-collapse">
                         <thead>
-                            <tr class="bg-slate-900 text-white header-bg">
-                                <th class="p-2.5 border">م</th>
-                                <th class="p-2.5 border">اسم البرنامج / النشاط</th>
-                                <th class="p-2.5 border">المستهدف</th>
-                                <th class="p-2.5 border">المنفذ</th>
-                                <th class="p-2.5 border">الحالة</th>
-                                <th class="p-2.5 border">المستفيدون</th>
-                                <th class="p-2.5 border">نسبة المشاركة</th>
+                            <tr class="bg-slate-800 text-white">
+                                <th class="p-2 border">البرنامج</th>
+                                <th class="p-2 border">الرئيسي</th>
+                                <th class="p-2 border">المساند</th>
+                                <th class="p-2 border">الحالة</th>
+                                <th class="p-2 border">التقييم</th>
+                                <th class="p-2 border">التاريخ</th>
+                                <th class="p-2 border">إجراءات التحسين</th>
                             </tr>
                         </thead>
-                        <tbody id="reportProgramsTable" class="divide-y divide-slate-200">
-                            <!-- تعبئة تلقائية من API -->
+                        <tbody id="trackRecordsBody" class="divide-y divide-slate-200">
+                            <!-- المتابعات المسجلة -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- رسم بياني لغياب الطلاب والتقويم -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 no-print">
-                <div class="bg-white p-4 rounded-xl shadow-sm border">
-                    <h4 class="text-xs font-bold text-slate-700 mb-2">منحنى غياب الطلاب الإسبوعي</h4>
-                    <div class="h-56"><canvas id="reportAbsenceChart"></canvas></div>
-                </div>
-                <div class="bg-white p-4 rounded-xl shadow-sm border">
-                    <h4 class="text-xs font-bold text-slate-700 mb-2">نتائج التقويم الذاتي vs الخارجي</h4>
-                    <div class="h-56"><canvas id="reportGapChart"></canvas></div>
-                </div>
-            </div>
-
-            <!-- التوقيعات الرسمية في الطباعة -->
-            <div class="pt-8 grid grid-cols-2 text-center text-xs font-bold text-slate-900">
-                <div>
-                    <p>الموجه الطلابي / فريق التميز والجودة</p>
-                    <p class="mt-8 text-slate-700">سعيد أحمد المالكي</p>
-                </div>
-                <div>
-                    <p>مدير المدرسة</p>
-                    <p class="mt-8 text-slate-700">عبدالله سعد السعيّد</p>
-                </div>
-            </div>
-
-        </section>
-
-        <!-- 3. تبويب قاعدة البيانات الحية -->
-        <section id="tab-database" class="tab-content hidden bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-sm font-bold text-slate-800">جدول البيانات المباشر من Google Sheets</h2>
-                <div class="flex items-center gap-2">
-                    <select id="dbSheetSelector" onchange="loadDatabaseTable()" class="border text-xs rounded-lg p-2 font-bold bg-slate-50">
-                        <option value="التوجيه الطلابي">التوجيه الطلابي</option>
-                        <option value="بيانات الخطط المدرسية">بيانات الخطط المدرسية</option>
-                        <option value="حصر نسبة غياب الطلاب">حصر غياب الطلاب</option>
-                        <option value="نتائج التقويم الذاتي والخارجي">نتائج التقويم الذاتي والخارجي</option>
-                    </select>
-                    <button onclick="loadDatabaseTable()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-lg text-xs font-bold">
-                        <i class="fa-solid fa-rotate ml-1"></i> تحديث
-                    </button>
-                </div>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="w-full text-right text-xs border-collapse">
-                    <thead>
-                        <tr id="dbTableHeaders" class="bg-slate-800 text-white"></tr>
-                    </thead>
-                    <tbody id="dbTableBody" class="divide-y divide-slate-200"></tbody>
-                </table>
-            </div>
         </section>
 
     </main>
-
-    <!-- نافذة استيراد البيانات من موقع تفاعلي خارجي (Import Modal) -->
-    <div id="importModal" class="fixed inset-0 bg-slate-900/60 hidden backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 space-y-4">
-            <div class="flex justify-between items-center border-b pb-2">
-                <h3 class="text-sm font-bold text-slate-800">استيراد البرامج من موقع تفاعلي خارجي</h3>
-                <button onclick="closeImportModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <p class="text-xs text-slate-600">ألصق بيانات البرامج بصيغة JSON أو CSV المرسلة من موقعك التفاعلي ليتم دمجها وإرسالها فوراً لقاعدة البيانات:</p>
-            
-            <textarea id="externalDataInput" rows="5" class="w-full border rounded-lg p-3 text-xs font-mono bg-slate-50 focus:ring-2 focus:ring-emerald-500" placeholder='[{"sheet": "التوجيه الطلابي", "data": [1, "برنامج تفاعلي", 50, 50, "نفذ", 50, 50, "100%"]}]'></textarea>
-
-            <div class="flex justify-end gap-2">
-                <button onclick="closeImportModal()" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold">إلغاء</button>
-                <button onclick="processExternalImport()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold">استيراد ودمج البيانات</button>
-            </div>
-        </div>
-    </div>
 
     <script src="app.js"></script>
 </body>
